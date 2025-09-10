@@ -23,9 +23,8 @@
 #define BUZZER_BEEP_FREQ 1000
 #define BUZZER_BEEP_DURATION 30
 
-unsigned long buzzStartTime = 0;
-unsigned long noteStartTime = 0;
-int currentNote = -1;  // -1 = not playing
+unsigned long noteStartTime = 0;  // tracks when a note starts playing
+int currentNote = -1;             // -1 = not playing
 
 struct Note {
   int frequency;   // 0 for silence
@@ -33,16 +32,18 @@ struct Note {
   int pauseAfter;  // how long to wait before next note (0 = end sequence)
 };
 
-Note* currentSequence;
+Note* currentSequence;  // stores the sequence currently playing, or the last sequence played
 
+//beeeep-beeeep, beeeep-beeeep
 Note seesionEndSequence[] = {
   { BUZZER_BEEP_FREQ, 140, 200 },
   { BUZZER_BEEP_FREQ, 140, 750 },
   { BUZZER_BEEP_FREQ, 140, 200 },
   { BUZZER_BEEP_FREQ, 140, 750 },
-  { 0, 0, 0 },
+  { 0, 0, 0 }  //ALWAYS add this to the end of a sequence
 };
 
+//be-be-be-beep, be-be-be-beep
 Note pomodoroCompleteSequence[] = {
   { BUZZER_BEEP_FREQ, 80, 115 },
   { BUZZER_BEEP_FREQ, 80, 115 },
@@ -52,61 +53,67 @@ Note pomodoroCompleteSequence[] = {
   { BUZZER_BEEP_FREQ, 80, 115 },
   { BUZZER_BEEP_FREQ, 80, 115 },
   { BUZZER_BEEP_FREQ, 80, 570 },
-  { 0, 0, 0 },
+  { 0, 0, 0 }
 };
 
 
 //--------------------TIME MANAGEMENT--------------------
+/* 
+NOTE ON TERMINOLOGY: 
+      A "pomodoro" refers to a complete cycle, including the long break.
+      A "segment" refers to an individual part of a pomodoro like work, sBreak and lBreak.
+      A "session" refers to a work segement, followed by a sBreak.
+*/
+
 #define MILLIS_IN_SEC 1000
 #define MILLIS_IN_MIN 60000
-#define TIME_INCREMENT 300000  //05:00
-#define MAX_TIMER_VAL 3300000  //55:00
-#define TICK_RATE 60           //Avoids overflows at the end of sessions
+#define TIME_INCREMENT 300000  //5 minutes
+#define MAX_TIMER_VAL 3300000  //55 minutes
+#define TICK_RATE 60           //Avoids overflows at the end of segments
 
 
 /*The additional 999 ms allows the total duration to actually be shown when a segment begins,
 otherwise, timers start at 24:59 rather than 25:00.*/
 #if TEST_MODE == 0
-unsigned long workDuration = 1500000 + 999;   //25 minutes
-unsigned long sBreakDuration = 300000 + 999;  //5 minutes
-unsigned long lBreakDuration = 900000 + 999;  //15 minutes
+unsigned long workDuration = 1500000 + 999;   //duration of a work segment, 25 minutes
+unsigned long sBreakDuration = 300000 + 999;  //duration of short breaks, 5 minutes
+unsigned long lBreakDuration = 900000 + 999;  //duration of long breaks, 15 minutes
 #endif
 
-//Super short durations for testing
 #if TEST_MODE == 1
 unsigned long workDuration = 5000 + 999;    //5 seconds
 unsigned long sBreakDuration = 5000 + 999;  //5 seconds
 unsigned long lBreakDuration = 5000 + 999;  //5 seconds
 #endif
 
-unsigned long timerStartTime = 0;
-unsigned long pauseStartTime = 0;
+unsigned long timerStartTime = 0;  // tracks when a timer starts
+unsigned long pauseStartTime = 0;  // tracks when a pause starts
 
-unsigned long elapsedTime = 0;
-unsigned long elapsedPauseTime = 0;
+unsigned long elapsedTime = 0;       // tracks how much time passed since a timer was started
+unsigned long elapsedPauseTime = 0;  // tracks how much time was spent in pause per segment, cumulative.
 
-bool sessionStart = false;
-int completedWorkSessions = 0;
-int totalWorkSessions = 4;
+bool segmentStart = false;  // decides if a segment just began.
+int completedSessions = 0;  // how many sessions have been completed.
+int totalSessions = 4;      // how many sessions there are in total.
 
-unsigned long minDisplay = 0;
-unsigned long secDisplay = 0;
-char timeBuffer[6];  //Time is formatted as MM:SS\0, so it's always 6 bytes
+unsigned long minDisplay = 0; // stores how much time to display as minutes
+unsigned long secDisplay = 0; // stores how much time to display as seconds
+char timeBuffer[6];  // stores the time to display as text formatted as MM:SS\0, so it's always 6 bytes
 
 //--------------------MENU MANAGEMENT--------------------
-byte menuItem = 1;
-bool selected = false;
-volatile bool cw = false;
-volatile bool ccw = false;
+byte menuItem = 1;          // which menu item is highlighted
+bool selected = false;      // whether a menu item is selected (in its submenu)
+volatile bool cw = false;   // tracks whether there a CW rotation has just occured
+volatile bool ccw = false;  // tracks whether there a CCW rotation has just occured
 
 //--------------------ROTATION MANAGEMENT--------------------
-volatile int currentStateCLK;
-volatile int previousStateCLK;
-volatile unsigned long lastEncoderTime = 0;
+volatile int currentStateCLK;                // current state of the CLK pin
+volatile int previousStateCLK;               // previous state of the CLK pin
+volatile unsigned long lastEncoderTime = 0;  // tracks the last time the CLK pin was read
 
 //--------------------BUTTON MANAGEMENT--------------------
-int btnState;
-unsigned long lastButtonPress = 0;
+int btnState;                       // tracks the state of the encoder's switch
+unsigned long lastButtonPress = 0;  // tracks the last time the encoder's switch was read
 
 //--------------------FSM MANAGEMENT--------------------
 enum State {
@@ -117,15 +124,15 @@ enum State {
   MENU
 };
 
-State currentState = MENU;
-State previousState = NULL;
+State currentState = MENU;   // tracks the current state of the FSM
+State previousState = NULL;  // tracks the previous state of the FSM, used to return to the previous state when unpausing
 
 //--------------------DISPLAY MANAGEMENT--------------------
 
-//Manages the blinking timer while paused
-#define BLINK_FREQ 600
-bool displayIsBlank = false;
-unsigned long lastBlink = 0;
+
+#define BLINK_FREQ 600        // manages the blinking timer while paused
+bool displayIsBlank = false;  // tracks whether the time section of the display is blank
+unsigned long lastBlink = 0;  // tracks the last time the display was updated while paused
 
 //Used to center text
 int16_t x1, y1;
@@ -278,7 +285,7 @@ void displayTopBar(char* text) {
   display.setTextColor(WHITE, BLACK);
 
   if (currentState != MENU) {
-    sprintf(fullText, "%s - %d/%d", text, completedWorkSessions + 1, totalWorkSessions);
+    sprintf(fullText, "%s - %d/%d", text, completedSessions + 1, totalSessions);
   } else {
     strcpy(fullText, text);
   }
@@ -450,6 +457,7 @@ void loop() {
 
   //If we detect LOW signal, button is pressed
   if (btnState == LOW) {
+
     //if 200ms have passed since last LOW pulse, it means that the
     //button has been pressed, released and pressed again
     if (millis() - lastButtonPress > SW_DEBOUNCE_DELAY) {
@@ -458,12 +466,12 @@ void loop() {
 
       //Behavior in menu
       if (currentState == MENU && menuItem == 4) {
-        selected = false;  //Not useful now, but it will be when I add cancellation
-        sessionStart = true;
+        selected = false;
+        segmentStart = true;
         currentState = WORK;
       } else if (currentState == MENU && menuItem != 4) {
         selected = !selected;
-      } else {  //This line stops the timer from pausing instantly after starting a session
+      } else {  //This line stops the timer from pausing instantly after starting a pomodoro
 
         //Behavior during session
         if (currentState != MENU && currentState != PAUSE) {
@@ -489,12 +497,12 @@ void loop() {
 
   //--------------------TIMER LOGIC--------------------
 
-  //Reset timer data when starting a session
-  if (sessionStart) {
+  //Reset timer data when starting a segment
+  if (segmentStart) {
     elapsedTime = 0;
     elapsedPauseTime = 0;
     timerStartTime = millis();
-    sessionStart = false;
+    segmentStart = false;
   }
 
   switch (currentState) {
@@ -525,14 +533,14 @@ void loop() {
       if (workDuration - elapsedTime > TICK_RATE) {
         elapsedTime = millis() - timerStartTime - elapsedPauseTime;
       } else {
-        if (completedWorkSessions < totalWorkSessions - 1) {
+        if (completedSessions < totalSessions - 1) {
           startBeepSequence(seesionEndSequence);
           currentState = S_BREAK;
-          sessionStart = true;
+          segmentStart = true;
         } else {
           startBeepSequence(pomodoroCompleteSequence);
           currentState = L_BREAK;
-          sessionStart = true;
+          segmentStart = true;
           break;
         }
       }
@@ -548,9 +556,9 @@ void loop() {
         elapsedTime = millis() - timerStartTime - elapsedPauseTime;
       } else {
         startBeepSequence(seesionEndSequence);
-        ++completedWorkSessions;
+        ++completedSessions;
         currentState = WORK;
-        sessionStart = true;
+        segmentStart = true;
         break;
       }
 
@@ -566,8 +574,8 @@ void loop() {
       } else {
         startBeepSequence(seesionEndSequence);
         currentState = WORK;
-        sessionStart = true;
-        completedWorkSessions = 0;
+        segmentStart = true;
+        completedSessions = 0;
         break;
       }
 
