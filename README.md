@@ -1,1 +1,1 @@
-# pomocube_prototype1
+# Project Pomocube - Prototype 1
