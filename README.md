@@ -1,14 +1,5 @@
 <a id="readme-top"></a>
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
 <div align="center">
   <h1 align="center">Project Pomocube - Prototype 1</h1>
 
@@ -81,63 +72,79 @@ implement some basic functionality. Later revisions will use different parts and
 
 ## Parts Selection
 
-Continuing the theme of simplicity, this project requires very few parts.
+Continuing the theme of simplicity, this project requires very few parts to get working.
+
+### Bill of Materials
+
+| Description | Part Number | Quantity | Unit Cost (CAD) |
+|---|---|---|---|
+| ELEGOO Arduino Uno R3 w/ ATmega328P | EL-CB-001 | 1 | $24.99 |
+| GeeekPi 0.96" Monochrome OLED | - | 1 | $4.80 |
+| Cylewet KY-40 Rotary Encoder | CLT1062 | 1 | $2.80 |
+| Passive Buzzer | - | 1 | $0.88 |
+| Total | - | - | $33.47 |
 
 ### Microcontroller - ATmega328P (With Arduino Uno R3)
 
-Yes, I'm using an Arduino Uno R3. 
+Yes, I'm using an Arduino, but hear me out. The truth is that I didn't know any better when I started tinkering with embedded development.
+By the time I learned that this MCU is very old and the Arduino platform simplifies away a lot of things, I had already bought some equipment,
+so I figured I might as well make a quick and dirty prototype with what I have to get my feet wet and have something to show at my school's career fair, 
+which is in 2 weeks as I'm writing these lines. The intention was never to make the final version with this MCU or with the Arduino IDE. 
+I plan to use the much more powerful STM32-F446RE instead. For this first iteration however, this will do.
 
 ### Display - 0.96" SSD1306 Monochrome OLED
 
-
+This display is cheap, has plenty of support and documentation, and looks very sharp. My UI contains a lot blank space, which pairs well
+with the deep blacks OLEDs are known for. This project is simple enough to not require high-speed communication, so I²C's 2-cable setup 
+helps cut down on the cable clutter as well.
 
 ### Rotary Encoder - KY-40
 
-This rotary encoder is the only form of input for this device. No touch screen!
+This rotary encoder is the only form of input for this device. It's satisfying to rotate around and fairly intuitive.
+The added bonus of the KY-40 is that it's soldered to a PCB which already includes the resistors you need to filter out
+the noise from the SW, CLK and DT signals. That does make it a little harder to secure on a breadboard, but I can deal with that.
 
 ### Passive Buzzer
 
-It's... the one that came with my Arduino starter kit. It gets the job done.
+It's the one that came with my Arduino starter kit. It gets the job done.
+
+
+### Wiring diagram
+
+<img width="497" height="578" alt="{C89FDA2B-B4BD-4FD9-9956-544990561FB0}" src="https://github.com/user-attachments/assets/bffef6d4-cfb3-4b5c-992a-340779c5e63c" />
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- GETTING STARTED -->
 ## The Process
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+
 
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Final Result
 
 <!-- USAGE EXAMPLES -->
 ## Challenges
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- ROADMAP -->
-## Roadmap
+## What Next?
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
-
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+- [x] Create Arduino-based prototype
+- [ ] Create STM32 prototype
+- [ ] Design and produce PCB
+- [ ] Design and 3D print case
+- [ ] Make final build
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
