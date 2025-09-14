@@ -18,20 +18,35 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#built-with">Introduction</a></li>
+        <li><a href="#built-with">What the Hell is a Pomodoro?</a></li>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#getting-started">Parts Selection</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#prerequisites">Bill of Materials</a></li>
+        <li><a href="#installation">Microcontroller</a></li>
+        <li><a href="#installation">Display</a></li>
+        <li><a href="#installation">Rotary Encoder</a></li>
+        <li><a href="#installation">Passive Buzzer</a></li>
+        <li><a href="#installation">Wiring Diagram</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
+    <li>
+      <a href="#usage">The Process</a>
+      <ul>
+        <li><a href="#prerequisites">Getting the Encoder Working</a></li>
+        <li><a href="#installation">Displaying a Timer</a></li>
+        <li><a href="#installation">Creating a Finite State Machine (FSM)</a></li>
+        <li><a href="#installation">Implementing a Pause Feature</a></li>
+        <li><a href="#installation">Creating a Main Menu</a></li>
+        <li><a href="#installation">Implementing a Buzzer</a></li>
+        <li><a href="#installation">Tying it All Togetherr</a></li>
+      </ul>
+    </li>
+    <li><a href="#roadmap">Final Result</a></li>
+    <li><a href="#contributing">Conclusion</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -40,12 +55,17 @@
 
 
 <!-- ABOUT THE PROJECT -->
+<a id="about-the-project"></a>
 ## About The Project
+
+<a id="introduction"></a>
+### Introduction
 
 As an electrical engineering student, I'm well-aware that just getting the degree isn't nearly enough to set yourself apart when looking for a job or an internship, <em>especially</em> not in this job market.
 A common strategy to counter that is to work on personal projects in your free time, but I'm also an engineer, so I may as well use that as a chance to fix a problem in my life. Enter the Pomocube.
 
-### What the hell is a pomodoro?
+<a id="what-the-hell-is-a-pomodoro"></a>
+### What the Hell is a Pomodoro?
 
 Named after the tomato-shaped kitchen timer, the pomodoro technique is a way to stay focused for long periods of time. You work for 25 minutes, then take a 5 minute break, and repeat the process 3 more times, with a longer break at the end.
 By taking small, regular breaks, you allow your attention-span to recharge, keeping you more productive overall. Plus, you always have a small reward to look forward too. Everyone is obviously different, but I have personally had
@@ -69,11 +89,13 @@ implement some basic functionality. Later revisions will use different parts and
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
+<!-- PARTS SELECTION -->
+<a id="parts-selection"></a>
 ## Parts Selection
 
 Continuing the theme of simplicity, this project requires very few parts to get working.
 
+<a id="bill-of-materials"></a>
 ### Bill of Materials
 
 | Description | Part Number | Quantity | Unit Cost (CAD) |
@@ -84,6 +106,7 @@ Continuing the theme of simplicity, this project requires very few parts to get 
 | Passive Buzzer | - | 1 | $0.88 |
 | Total | - | - | $33.47 |
 
+<a id="microcontroller"></a>
 ### Microcontroller - ATmega328P (With Arduino Uno R3)
 
 Yes, I'm using an Arduino, but hear me out. The truth is that I didn't know any better when I started tinkering with embedded development.
@@ -92,32 +115,33 @@ so I figured I might as well make a quick and dirty prototype with what I have t
 which is in 2 weeks as I'm writing these lines. The intention was never to make the final version with this MCU or with the Arduino IDE. 
 I plan to use the much more powerful STM32-F446RE instead. For this first iteration however, this will do.
 
+<a id="display"></a>
 ### Display - 0.96" SSD1306 Monochrome OLED
 
 This display is cheap, has plenty of support and documentation, and looks very sharp. My UI contains a lot blank space, which pairs well
 with the deep blacks OLEDs are known for. This project is simple enough to not require high-speed communication, so I²C's 2-cable setup 
 helps cut down on the cable clutter as well.
 
+<a id="rotary-encoder"></a>
 ### Rotary Encoder - KY-40
 
 This rotary encoder is the only form of input for this device. It's satisfying to rotate around and fairly intuitive.
 The added bonus of the KY-40 is that it's soldered to a PCB which already includes the resistors you need to filter out
 the noise from the SW, CLK and DT signals. That does make it a little harder to secure on a breadboard, but I can deal with that.
 
+<a id="passive-buzzer"></a>
 ### Passive Buzzer
 
 It's the one that came with my Arduino starter kit. It gets the job done.
 
-
+<a id="wiring-diagram"></a>
 ### Wiring Diagram
 
 <img width="497" height="578" alt="{C89FDA2B-B4BD-4FD9-9956-544990561FB0}" src="https://github.com/user-attachments/assets/bffef6d4-cfb3-4b5c-992a-340779c5e63c" />
 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- GETTING STARTED -->
+<!-- THE PROCESS -->
+<a id="the-process"></a>
 ## The Process
 
 ### Getting the Encoder Working
@@ -129,6 +153,7 @@ how the device actually works. The solution was simply to invert the logic in th
 
 <img width="371" height="441" alt="image" src="https://github.com/user-attachments/assets/f5e2d0a1-2fed-4f4c-a66a-c00109776211" />
 
+<a id="displaying-a-timer"></a>
 ### Displaying a Timer
 With the encoder working, my next task was to get that OLED screen to work. First, I had to choose between using a library, following a tutorial, or writing the logic myself. 
 I opted for the first and third options because doing things on your own builds one’s engineering mindset and helps keep bloat down. I didn't want this project to
@@ -184,12 +209,14 @@ if (timerDuration - elapsedTime > TICK_RATE) {
 This resulted in the functional, albeit rudimentary timer you can see here:
 (Photo of timer from day 2)
 
+<a id="creating-a-fsm"></a>
 ### Creating a FSM
 
 Next, I started implementing a finite state machine to manage the timer’s possible states. The first iteration was as simple as possible with 3 states: WORK, S_BREAK AND L_BREAK. 
 Implementing them with a switch statement was easy enough, especially after taking the time to draw my FSM on a whiteboard.
 (Whiteboard photo 1)
 
+<a id="implementing-a-pause-feature"></a>
 ### Implementing a Pause Feature
 
 This was one of the more challenging parts of this project. It took me a few hours to figure it out, plus I needed a nudge from an LLM. I made sure not to let it give me a solution though. 
@@ -206,6 +233,7 @@ and I whispered “motherf**ker” to myself. Here’s the updated FSM diagram:
 
 (Photo Day 4 FSM)
 
+<a id="creating-a-main-menu"></a>
 ### Creating a Main Menu
 
 With the project really starting to take shape, I added the main menu that lets you configure your durations and start the timer. That involved a lot of challenges.
@@ -229,6 +257,7 @@ clean up my code by adding comments, simplifying some sections, creating some he
 
 (Photo from day 5-6)
 
+<a id="implementing-a-buzzer"></a>
 ### Implementing a Buzzer
 
 The last major feature to implement was a passive buzzer. Getting that to work was surprisingly hard. The obvious option would have been to simply use Arduino’s delay() function, but that puts the entire program to a halt, which doesn’t work 
@@ -243,6 +272,7 @@ Upon returning to my desk, I had a new idea: split the very first tone and all t
 
 Then I had to do some fiddling to make things actually good. I ran into an issue where the buzzer would play horrible high-pitch sound, even though it was supposed to be done playing sounds. Turns out I had just forgotten to set the final note’s wait time to 0. Oops. Another problem was the volume. The tones were absurdly loud. They absolutely decimated my eardrums. There’s this concept called resonant frequency. I’m not too informed on it, but from what I understand, there’s a sweet-spot frequency where a passive buzzer is at absolute loudest. I learned the hard way that for mine, that frequency is 2000 Hz. Now, I could have added a potentiometer or a resistor to tone it down, but I’d rather keep volume controls for a future iteration, along with a rumble feature in case there are people around. So I just adjusted the frequency to 1000 Hz.
 
+<a id="tying-it-all-together"></a>
 ### Tying it all together
 
 With this, all of the main functionality for this timer was COMPLETE… But there were still a couple of QOL tweaks to make. I’d deferred almost every UI and UX feature until the end, so now is the time to tackle that. T
@@ -262,13 +292,15 @@ After this, I had a couple more bothersome flies to swat down for added polish:
 * There was a slight debouncing issue with the rotary encoder, specifically when rotating clockwise. I fixed this by requiring at least 2 ms of delay between inputs. Any more and too many inputs were skipped. Any less and the problem simply wasn’t fixed.
   This still doesn't feel as good as I'd like, but it'll have to do for this iteration.
 
+<a id="final-result"></a>
 ## Final Result
 
 After ordering a Nano V3, ~~stealing~~ borrowing my sister's battery bank and doing some quick cable management to make the whole thing portable, this is the final result.
 
 (Photo of portable version)
 
-<!-- ROADMAP -->
+<!-- CONCLUSION -->
+<a id="conclusion"></a>
 ## Conclusion
 
 I'm proud of what I've accomplished so far, but this is only the beginning. I really plan to design an actual product from A to Z.
@@ -285,14 +317,16 @@ This was seriously really fun to make, and I have not felt this motivated by a p
 you have the patience of a saint, because holy crap was it long. Thank you for reading, and I hope you got something out of it.
 
 <!-- CONTACT -->
+<a id="contact"></a>
 ## Contact
 
-Email - salif8514@gmail.com
+Email - salif8514@gmail.com<br/>
 LinkedIn - https://www.linkedin.com/in/salif-d-b567011ba/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
+<a id="acknowledgments"></a>
 ## Acknowledgments
 
 * [Choose an Open Source License](https://choosealicense.com)
