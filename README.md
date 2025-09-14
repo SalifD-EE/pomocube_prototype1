@@ -154,7 +154,7 @@ display.print(minDisplay);
 
 
 The next challenge was to handle the end of a segment. At first, I thought I just needed to check if the remaining time was higher than zero.
-But doing that resulted in the timer somehow jumping to a much higher time. Why? I printed the remaining time on the Serial Monitor to figure out what the hell was going on (the Uno dosen't support debugging, alas).
+But doing that resulted in the timer somehow jumping to a much higher time. Why? I printed the remaining time on the Serial Monitor to figure out what the hell was going on (the Uno doesn't support debugging, alas).
 
 ```
 195
@@ -181,7 +181,7 @@ if (timerDuration - elapsedTime > TICK_RATE) {
     //End of segment logic goes here...
 }
 ```
-This resulted in a functional timer, albeit rudimentary timer you can see here:
+This resulted in the functional, albeit rudimentary timer you can see here:
 (Photo of timer from day 2)
 
 ### Creating a FSM
@@ -200,7 +200,7 @@ The elapsed time is usually calculated using the difference between the current 
 At a low level like this, we’re reading more or less from the oscillator (likely with a bunch of stuff simplified by the Arduino platform), which cannot be stopped. 
 If you pause for 30 seconds, millis() now has 30 seconds more than what you’re expecting. So all you need to do is take those 30 seconds away from millis(), and you’re back to the exact state you were in before pausing.
 
-Even while implementing this, I ran into some issues. The time added back made no sense. After some rudimentary debugging, I quickly realised that I need to keep a tally of not just one pause, but all the pauses until 
+Even while implementing this, I ran into some issues. The time added back made no sense. After some rudimentary debugging, I quickly realized that I need to keep a tally of not just one pause, but all the pauses until 
 a new segment starts and the start time is reset to 0. The total pause time needs to be reset to 0 at that point, too. And now, pausing works as it should. When it did, a rush of excitement and satisfaction coursed through my body 
 and I whispered “motherf**ker” to myself. Here’s the updated FSM diagram:
 
@@ -211,7 +211,7 @@ and I whispered “motherf**ker” to myself. Here’s the updated FSM diagram:
 With the project really starting to take shape, I added the main menu that lets you configure your durations and start the timer. That involved a lot of challenges.
 
 First, I had to come up with a system to manage the menu’s states. I took liberal inspiration from this All About Circuits tutorial: https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/. 
-It was no mere copy-paste though. The underlying logic is the same, but I heavily modified the code to fit my needs. 2 variables drive the menu, one for which item is selected and another for whether you’re adjusting it or not. 
+It was no mere copy-paste though. The underlying logic is the same, but I heavily modified the code to fit my needs. Two variables drive the menu: one for which item is selected and another for whether you’re adjusting it or not. 
 
 The second challenge was to draw the menu. I once again used AAC’s tutorial as a base. It took me little more than simple if-else statements to determine whether each item was highlighted or not. 
 Some basic math involving text bounds also allowed me to dynamically center elements on the screen. Displaying the time was a little trickier. My previous displayTime() function was a poor fit for this, 
@@ -224,14 +224,14 @@ That introduced a lot of delays. So I had to learn interrupts, but it honestly w
 And voila, it’s much more responsive now, albeit with some oversensitivity issues with CW rotations that will need to be fixed later.
 
 And finally, I had to put it all together. Note to self: don’t make separate files to add new features. The merging process was tedious because by the time I had a functional menu, I had duplicated a lot of stuff from the main file. 
-Playing spot the differences with code is not my idea of fun. Next time, I’m using version control, because I could have just made another branch instead of faffing around with careful copy-pasting. Anyway, I used this occasion to 
+Playing spot the differences with code is not my idea of fun. Next time, I’m using version control, because I could have just made another branch instead of messing around with careful copy-pasting. Anyway, I used this occasion to 
 clean up my code by adding comments, simplifying some sections, creating some helper functions and whatnot.
 
 (Photo from day 5-6)
 
 ### Implementing a Buzzer
 
-The last major feature to implement was a passive buzzer. Getting that to work was surpringly hard. The obvious option would have been to simply use Arduino’s delay() function, but that puts the entire program to a halt, which doesn’t work 
+The last major feature to implement was a passive buzzer. Getting that to work was surprisingly hard. The obvious option would have been to simply use Arduino’s delay() function, but that puts the entire program to a halt, which doesn’t work 
 because the display needs to keep refreshing in the background. The classic millis() approach doesn’t work either, because playing a melody made of different notes and pauses would be impossible. Each new loop would forget the last note played 
 and wouldn’t know which one to play next. The only way to stop that from happening is to create a sequencer, which is what I did. To that end, I created a struct called “Note”, which contains the frequency, duration and most importantly, 
 how long to wait until the next note. Putting Notes into an array allows one to build any melody they wish by simply specifying which notes to play manually. A global variable named currentNote decides how far along we are in the sequence 
@@ -246,7 +246,7 @@ Then I had to do some fiddling to make things actually good. I ran into an issue
 ### Tying it all together
 
 With this, all of the main functionality for this timer was COMPLETE… But there were still a couple of QOL tweaks to make. I’d deferred almost every UI and UX feature until the end, so now is the time to tackle that. T
-he first thing that needed to go was that dreadful default font for the time display. I replaced it by Sans, one of the fonts offered by the Adafruit GFX library. It’s inspired by the perennial Helvetica and it looks great. 
+he first thing that needed to go was that dreadful default font for the time display. I replaced it with Sans, one of the fonts offered by the Adafruit GFX library. It’s inspired by the perennial Helvetica and it looks great. 
 It instantly transformed the feel of the product from hacker doo-dad to a real product used by real people. I mean, witness the difference yourself.
 
 (Photo of comparison)
@@ -271,7 +271,7 @@ After ordering a Nano V3, ~~stealing~~ borrowing my sister's battery bank and do
 <!-- ROADMAP -->
 ## Conclusion
 
-I'm proud of what I've accomplished so far, but this is only the beginning. I really plan to design an actual product from A to Z, and I want to git gud at it.
+I'm proud of what I've accomplished so far, but this is only the beginning. I really plan to design an actual product from A to Z.
 Here's the roadmap I have in mind to get there:
 
 - [x] Create an Arduino-based prototype
