@@ -59,25 +59,29 @@ Note pomodoroCompleteSequence[] = {
 
 //--------------------TIME MANAGEMENT--------------------
 /* 
-NOTE ON TERMINOLOGY: 
-      A "pomodoro" refers to a complete cycle, including the long break.
-      A "segment" refers to an individual part of a pomodoro like work, sBreak and lBreak.
-      A "session" refers to a work segement, followed by a sBreak.
+A NOTE ON TERMINOLOGY: 
+  -A "pomodoro" refers to a complete cycle, including the long break.
+  -A "segment" refers to an individual part of a pomodoro like work, sBreak and lBreak.
+  -A "session" refers to a work segement, followed by a sBreak.
 */
 
 #define MILLIS_IN_SEC 1000
 #define MILLIS_IN_MIN 60000
+
+/*The additional 999 ms allows the total duration to actually be shown when a segment begins,
+otherwise, timers start at 24:59 rather than 25:00.*/
+#define PRETTY_TIME_BUFFER 999 
+
 #define TIME_INCREMENT 300000  //5 minutes
 #define MAX_TIMER_VAL 3300000  //55 minutes
 #define TICK_RATE 60           //Avoids overflows at the end of segments
 
 
-/*The additional 999 ms allows the total duration to actually be shown when a segment begins,
-otherwise, timers start at 24:59 rather than 25:00.*/
+
 #if TEST_MODE == 0
-unsigned long workDuration = 1500000 + 999;   //duration of a work segment, 25 minutes
-unsigned long sBreakDuration = 300000 + 999;  //duration of short breaks, 5 minutes
-unsigned long lBreakDuration = 900000 + 999;  //duration of long breaks, 15 minutes
+unsigned long workDuration = 1500000 + PRETTY_TIME_BUFFER;   //duration of a work segment, 25 minutes
+unsigned long sBreakDuration = 300000 + PRETTY_TIME_BUFFER;  //duration of short breaks, 5 minutes
+unsigned long lBreakDuration = 900000 + PRETTY_TIME_BUFFER;  //duration of long breaks, 15 minutes
 #endif
 
 #if TEST_MODE == 1
@@ -236,13 +240,13 @@ void manageRotation() {
 
     switch (menuItem) {
       case 1:
-        if (workDuration > 0) workDuration -= TIME_INCREMENT;
+        if (workDuration > 0 + PRETTY_TIME_BUFFER) workDuration -= TIME_INCREMENT;
         break;
       case 2:
-        if (sBreakDuration > 0) sBreakDuration -= TIME_INCREMENT;
+        if (sBreakDuration > 0 + PRETTY_TIME_BUFFER) sBreakDuration -= TIME_INCREMENT;
         break;
       case 3:
-        if (lBreakDuration > 0) lBreakDuration -= TIME_INCREMENT;
+        if (lBreakDuration > 0 + PRETTY_TIME_BUFFER) lBreakDuration -= TIME_INCREMENT;
         break;
     }
   }
@@ -490,7 +494,6 @@ void loop() {
         }
       }
     }
-
     // Remember last button press event
     lastButtonPress = millis();
   }
