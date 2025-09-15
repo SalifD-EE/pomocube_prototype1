@@ -18,35 +18,35 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#built-with">Introduction</a></li>
-        <li><a href="#built-with">What the Hell is a Pomodoro?</a></li>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#what-the-hell-is-a-pomodoro">What the Hell is a Pomodoro?</a></li>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Parts Selection</a>
+      <a href="#parts-selection">Parts Selection</a>
       <ul>
-        <li><a href="#prerequisites">Bill of Materials</a></li>
-        <li><a href="#installation">Microcontroller</a></li>
-        <li><a href="#installation">Display</a></li>
-        <li><a href="#installation">Rotary Encoder</a></li>
-        <li><a href="#installation">Passive Buzzer</a></li>
-        <li><a href="#installation">Wiring Diagram</a></li>
+        <li><a href="#bill-of-materials">Bill of Materials</a></li>
+        <li><a href="#microcontroller">Microcontroller</a></li>
+        <li><a href="#display">Display</a></li>
+        <li><a href="#rotary-encoder">Rotary Encoder</a></li>
+        <li><a href="#passive-buzzer">Passive Buzzer</a></li>
+        <li><a href="#wiring-diagram">Wiring Diagram</a></li>
       </ul>
     </li>
     <li>
-      <a href="#usage">The Process</a>
+      <a href="#the-process">The Process</a>
       <ul>
-        <li><a href="#prerequisites">Getting the Encoder Working</a></li>
-        <li><a href="#installation">Displaying a Timer</a></li>
-        <li><a href="#installation">Creating a Finite State Machine (FSM)</a></li>
-        <li><a href="#installation">Implementing a Pause Feature</a></li>
-        <li><a href="#installation">Creating a Main Menu</a></li>
-        <li><a href="#installation">Implementing a Buzzer</a></li>
-        <li><a href="#installation">Tying it All Togetherr</a></li>
+        <li><a href="#getting-the-encoder-working">Getting the Encoder Working</a></li>
+        <li><a href="#displaying-a-timer">Displaying a Timer</a></li>
+        <li><a href="#creating-a-fsm">Creating a Finite State Machine (FSM)</a></li>
+        <li><a href="#implementing-a-pause-feature">Implementing a Pause Feature</a></li>
+        <li><a href="#creating-a-main-menu">Creating a Main Menu</a></li>
+        <li><a href="#implementing-a-buzzer">Implementing a Buzzer</a></li>
+        <li><a href="#tying-it-all-together">Tying it All Together</a></li>
       </ul>
     </li>
-    <li><a href="#roadmap">Final Result</a></li>
-    <li><a href="#contributing">Conclusion</a></li>
+    <li><a href="#final-result">Final Result</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -71,7 +71,7 @@ Named after the tomato-shaped kitchen timer, the pomodoro technique is a way to 
 By taking small, regular breaks, you allow your attention-span to recharge, keeping you more productive overall. Plus, you always have a small reward to look forward too. Everyone is obviously different, but I have personally had
 great success with this technique both to study and work.
 
-Of course, there are a lot of pomodoro apps out there, and I've used my share over the years (my favorite is https://www.flow.app/).
+Of course, there are a lot of pomodoro apps out there, and I've used my share over the years (my favorite is [Flow](https://www.flow.app/)).
 With that said, you may wonder why I'm taking on this project. Here are a couple of reasons:
 
 * I need a personal project, and this strikes a perfect balance between simplicity, relevance, and usefulness.
@@ -210,7 +210,7 @@ This resulted in the functional, albeit rudimentary timer you can see here:
 (Photo of timer from day 2)
 
 <a id="creating-a-fsm"></a>
-### Creating a FSM
+### Creating a Finite State Machine (FSM)
 
 Next, I started implementing a finite state machine to manage the timer’s possible states. The first iteration was as simple as possible with 3 states: WORK, S_BREAK AND L_BREAK. 
 Implementing them with a switch statement was easy enough, especially after taking the time to draw my FSM on a whiteboard.
@@ -238,7 +238,7 @@ and I whispered “motherf**ker” to myself. Here’s the updated FSM diagram:
 
 With the project really starting to take shape, I added the main menu that lets you configure your durations and start the timer. That involved a lot of challenges.
 
-First, I had to come up with a system to manage the menu’s states. I took liberal inspiration from this All About Circuits tutorial: https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/. 
+First, I had to come up with a system to manage the menu’s states. I took liberal inspiration from this [All About Circuits tutorial](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/). 
 It was no mere copy-paste though. The underlying logic is the same, but I heavily modified the code to fit my needs. Two variables drive the menu: one for which item is selected and another for whether you’re adjusting it or not. 
 
 The second challenge was to draw the menu. I once again used AAC’s tutorial as a base. It took me little more than simple if-else statements to determine whether each item was highlighted or not. 
