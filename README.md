@@ -349,7 +349,9 @@ LinkedIn - https://www.linkedin.com/in/salif-d-b567011ba/
 <a id="acknowledgments"></a>
 ## Acknowledgments
 
-* [Choose an Open Source License](https://choosealicense.com)
+* [Paul McWorther's excellent series on Arduino](https://www.youtube.com/playlist?list=PLGs0VKk2DiYw-L-RibttcvK-WBZm8WLEP)
+* [That one All About Circuits tutorial](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/)
+* [This guy explaining interrupts in a way that makes sense](https://www.circuitbasics.com/how-to-use-hardware-interrupts-and-timer-interrupts-on-the-arduino/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
