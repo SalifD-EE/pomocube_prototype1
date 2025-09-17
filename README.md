@@ -137,7 +137,7 @@ It's the one that came with my Arduino starter kit. It gets the job done.
 <a id="wiring-diagram"></a>
 ### Wiring Diagram
 
-<img width="497" height="578" alt="{C89FDA2B-B4BD-4FD9-9956-544990561FB0}" src="https://github.com/user-attachments/assets/bffef6d4-cfb3-4b5c-992a-340779c5e63c" />
+<img width="50%" height="50%" alt="{C89FDA2B-B4BD-4FD9-9956-544990561FB0}" src="https://github.com/user-attachments/assets/bffef6d4-cfb3-4b5c-992a-340779c5e63c" />
 
 
 <!-- THE PROCESS -->
@@ -163,9 +163,7 @@ I used Arduino’s millis() function as a base, which counts how much time in mi
 recording the value of millis() when the timer starts, defining how long I want the timer to run, and making various conversions and simple math to figure out what to display.
 
 ```
-//The modulo is to maintain base 60
-minDisplay = (timerDuration - elapsedTime)/MILLIS_IN_MIN % 60;
-secDisplay = (timerDuration - elapsedTime)/MILLIS_IN_SEC % 60;
+elapsedTime = millis() - timerStartTime;
 ```
 
 
@@ -193,7 +191,7 @@ But doing that resulted in the timer somehow jumping to a much higher time. Why?
 4294967135
 ```
 
-Then I understood. A closer look reveals that the ATmega 328P’s internal timer has a tick rate of roughly 45 ms at 16 MHz, so if the remaining time was smaller than that tick, we’d go into the negatives, except there are no negatives, 
+Then I understood. A closer look reveals that the ATmega 328P’s internal timer has a tick rate of roughly 45 ms at 16 MHz, so if the remaining time was smaller than that tick, we’d go into the negatives, except there <em>are</em> no negatives, 
 because time is handled with unsigned longs, so instead we overflow back to the highest value possible for that variable type, which is about 4.29 billion. That’s why we go from 16 to these ridiculously huge numbers. 
 The solution was to only update the timer if the remaining time was more than one tick away from zero, otherwise, the segment is over, and the timer stops. You do lose some precision because of this limitation, 
 but 50 milliseconds isn’t crucial for what is nothing more than a little study timer.
@@ -207,14 +205,20 @@ if (timerDuration - elapsedTime > TICK_RATE) {
 }
 ```
 This resulted in the functional, albeit rudimentary timer you can see here:
-(Photo of timer from day 2)
+<br/>
+<br/>
+<img width="40%" height="40%" alt="image" src="https://github.com/user-attachments/assets/7118cc0d-da98-4ad4-a9d0-6b2646958485" />
+
 
 <a id="creating-a-fsm"></a>
 ### Creating a Finite State Machine (FSM)
 
 Next, I started implementing a finite state machine to manage the timer’s possible states. The first iteration was as simple as possible with 3 states: WORK, S_BREAK AND L_BREAK. 
 Implementing them with a switch statement was easy enough, especially after taking the time to draw my FSM on a whiteboard.
-(Whiteboard photo 1)
+<br/>
+<br/>
+<img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/56cd5906-b2a3-4cff-8959-c05edb07cf6d" />
+
 
 <a id="implementing-a-pause-feature"></a>
 ### Implementing a Pause Feature
@@ -231,7 +235,8 @@ Even while implementing this, I ran into some issues. The time added back made n
 a new segment starts and the start time is reset to 0. The total pause time needs to be reset to 0 at that point, too. And now, pausing works as it should. When it did, a rush of excitement and satisfaction coursed through my body 
 and I whispered “motherf**ker” to myself. Here’s the updated FSM diagram:
 
-(Photo Day 4 FSM)
+<img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/ad76c537-368e-4018-bc0d-352e7a130adc" />
+
 
 <a id="creating-a-main-menu"></a>
 ### Creating a Main Menu
@@ -251,11 +256,11 @@ The third challenge was fixing my rotary encoder inputs, which worked fine on th
 That introduced a lot of delays. So I had to learn interrupts, but it honestly wasn’t too hard. All you have to do is plug the value you want to read into one of the Arduino’s interrupt pins and tell it which function to run when a change is detected. 
 And voila, it’s much more responsive now, albeit with some oversensitivity issues with CW rotations that will need to be fixed later.
 
-And finally, I had to put it all together. Note to self: don’t make separate files to add new features. The merging process was tedious because by the time I had a functional menu, I had duplicated a lot of stuff from the main file. 
-Playing spot the differences with code is not my idea of fun. Next time, I’m using version control, because I could have just made another branch instead of messing around with careful copy-pasting. Anyway, I used this occasion to 
+And finally, I had to put it all together. I used this occasion to 
 clean up my code by adding comments, simplifying some sections, creating some helper functions and whatnot.
 
-(Photo from day 5-6)
+<img width="40%" height="40%" alt="image" src="https://github.com/user-attachments/assets/5b1f8f1c-4e12-4e51-996d-64a9ba550ef2" />
+
 
 <a id="implementing-a-buzzer"></a>
 ### Implementing a Buzzer
@@ -279,10 +284,10 @@ With this, all of the main functionality for this timer was COMPLETE… But ther
 he first thing that needed to go was that dreadful default font for the time display. I replaced it with Sans, one of the fonts offered by the Adafruit GFX library. It’s inspired by the perennial Helvetica and it looks great. 
 It instantly transformed the feel of the product from hacker doo-dad to a real product used by real people. I mean, witness the difference yourself.
 
-(Photo of comparison)
+<img width="30%" height="30%" alt="image" src="https://github.com/user-attachments/assets/0061f9a2-940f-4262-81c7-f1ffc63ab661" />
+<img width="31%" height="31%" alt="image" src="https://github.com/user-attachments/assets/bf916b53-88bc-4455-bb2b-b92bdbedf712" />
+<br/>
 
-I had to play with some offsets to keep things centered because this font isn’t monospace, including, interestingly enough, special cases because the numbers 1 and 6 specifically shifted the entire display more than the other 
-numbers, but only when they were in the last position (this one → 00:0X). Graphic design is my passion. I also added some useful information to the top bar through a function called... displayTopBar().
 
 After this, I had a couple more bothersome flies to swat down for added polish:
 
@@ -295,15 +300,30 @@ After this, I had a couple more bothersome flies to swat down for added polish:
 <a id="final-result"></a>
 ## Final Result
 
-After ordering a Nano V3, ~~stealing~~ borrowing my sister's battery bank and doing some quick cable management to make the whole thing portable, this is the final result.
+After ordering a Nano V3, ~~stealing~~ borrowing my sister's battery bank and doing some quick cable management to make the whole thing portable, this is the final result:
 
-(Photo of portable version)
+<br/>
+<img width="40%" height="40%"  alt="image" src="https://github.com/user-attachments/assets/7088efaf-009c-4144-b957-8d6407224d5e" />
+<br/>
+Here, I connected the OLED screen to a couple of Dupont wires and propped it up on a phone stand for easier viewing.
+
+<br/><br/>
+<img width="40%" height="40%" alt="image" src="https://github.com/user-attachments/assets/74e80ea5-289a-4cb4-9774-4bf50e5c639b" />
+<br/>
+This is a portable version made with a Nano V3 and a battery pack.
+<br/><br/>
 
 <!-- CONCLUSION -->
 <a id="conclusion"></a>
 ## Conclusion
 
-I'm proud of what I've accomplished so far, but this is only the beginning. I really plan to design an actual product from A to Z.
+I'm proud of what I've accomplished so far and I've learned a lot from the process. Looking back, here's what I'd do differently with what I know now:
+<ul>
+  <li>Be more diligent when researching parts. Had I spent more time pondering what exactly I wanted to do with each component, I could have saved some cash on things I didn't end up using or will need to replace later down the line, especially for the display.</li>
+  <li>Use version control from the start. You're currently reading this on GitHub, so I obviously did that in the end, but didn't at first because I thought this project was too small to require it. I was wrong.</li>
+</ul>
+
+And yet, as you take lessons from the past, you must also look to the future. This is only the beginning, and I really plan to design an actual product from A to Z.
 Here's the roadmap I have in mind to get there:
 
 - [x] Create an Arduino-based prototype
@@ -313,30 +333,23 @@ Here's the roadmap I have in mind to get there:
 - [ ] Make the final build
 
 In the meantime, I'm using this prototype while studying and making notes of features to add and tweaks to make in the next iteration.
-This was seriously really fun to make, and I have not felt this motivated by a personal project in years. If you made it this far in my write-up,
-you have the patience of a saint, because holy crap was it long. Thank you for reading, and I hope you got something out of it.
+This was seriously really fun to make, and I have not felt this motivated by a personal project in years. If you made it this far in my 
+write-up, you have the patience of a saint, because holy crap was it long. Thank you for reading, and I hope you got something out of it.
 
 <!-- CONTACT -->
 <a id="contact"></a>
 ## Contact
 
+Wanna get in touch? Work with me? Have me work <em>for</em> you? You can find me here:
+
 Email - salif8514@gmail.com<br/>
 LinkedIn - https://www.linkedin.com/in/salif-d-b567011ba/
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
 <a id="acknowledgments"></a>
 ## Acknowledgments
 
 * [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
