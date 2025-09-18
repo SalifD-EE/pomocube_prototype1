@@ -302,15 +302,17 @@ After this, I had a couple more bothersome flies to swat down for added polish:
 
 After ordering a Nano V3, ~~stealing~~ borrowing my sister's battery bank and doing some quick cable management to make the whole thing portable, this is the final result:
 
+<br/><br/>
+<img width="50%" height="50%" alt="image" src="https://github.com/user-attachments/assets/74e80ea5-289a-4cb4-9774-4bf50e5c639b" />
 <br/>
-<img width="40%" height="40%"  alt="image" src="https://github.com/user-attachments/assets/7088efaf-009c-4144-b957-8d6407224d5e" />
+This is a portable version made with a Nano V3 and a battery pack.
+
+<br/>
+<img width="50%" height="50%"  alt="image" src="https://github.com/user-attachments/assets/bc0879d0-332a-4b03-87c8-1ff3039c5d07" />
+
 <br/>
 Here, I connected the OLED screen to a couple of Dupont wires and propped it up on a phone stand for easier viewing.
 
-<br/><br/>
-<img width="40%" height="40%" alt="image" src="https://github.com/user-attachments/assets/74e80ea5-289a-4cb4-9774-4bf50e5c639b" />
-<br/>
-This is a portable version made with a Nano V3 and a battery pack.
 <br/><br/>
 
 <!-- CONCLUSION -->
