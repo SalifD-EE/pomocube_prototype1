@@ -63,34 +63,33 @@
 <a id="introduction"></a>
 ### Introduction
 
-En tant qu'étudiant en génie électrique, je suis bien conscient qu'obtenir simplement le diplôme ne suffit pas pour se démarquer lors de la recherche d'emploi ou de stage, surtout dans le marché du travail actuel.
-Une stratégie courante pour contrer cela consiste à travailler sur des projets personnels pendant son temps libre, mais étant aussi ingénieur, autant en profiter pour résoudre un problème dans ma vie. Voici le Pomocube.
+En tant qu'étudiant en génie électrique, je suis bien conscient que simplement obtenir le diplôme ne suffit pas pour se démarquer lors de la recherche d'emploi ou de stage, surtout dans le marché du travail actuel.
+Une stratégie populaire pour contrer cela consiste à travailler sur des projets personnels pendant son temps libre. Par contre, étant un ingénieur, j'ai décidé d'en profiter pour résoudre un problème dans ma vie courante. Je vous présente donc le Pomocube.
 
 <a id="quest-ce-quun-pomodoro"></a>
-### Qu'est-ce qu'un pomodoro ?
+### Un pomodoro? C'est quoi ça?
 
-Nommée d'après le minuteur de cuisine en forme de tomate, la technique pomodoro est une façon de rester concentré pendant de longues périodes. Vous travaillez pendant 25 minutes, puis prenez une pause de 5 minutes, et répétez ce processus 3 fois de plus, avec une pause plus longue à la fin.
-En prenant de petites pauses régulières, vous permettez à votre attention de se recharger, vous gardant plus productif dans l'ensemble. De plus, vous avez toujours une petite récompense à anticiper. Chacun est différent, mais j'ai personnellement eu beaucoup de succès avec cette technique pour étudier et travailler.
+Nommée d'après la minuterie de cuisine en forme de tomate, la technique pomodoro est une façon de rester concentré pendant de longues périodes de temps. Un cycle typique implique 25 minutes de travail suivi de 5 minutes de pause. On répète ensuite ce cycle 3 fois de plus, avec une pause plus longue à la fin. Les pauses régulières permettent de rester attentif, et le résultat est une productivité accrue. De plus, la prochain petite récompense n'est jamais très loin. Tout le monde est différent, mais j'ai personnellement eu beaucoup de succès avec cette technique pour étudier et travailler.
 
-Bien sûr, il existe déjà beaucoup d'applications pomodoro, et j'en ai utilisé ma part au fil des années (ma préférée est [Flow](https://www.flow.app/)).
-Ceci dit, vous vous demandez peut-être pourquoi j'entreprends ce projet. Voici quelques raisons :
+Bien sûr, il existe déjà beaucoup d'applications pomodoro, et j'en ai utilisé plusieurs au fil des années (d'ailleurs, ma préférée est [Flow](https://www.flow.app/)).
+Ceci étant dit, vous vous demandez peut-être pourquoi j'entreprends ce projet. Voici quelques raisons :
 
 * J'ai besoin d'un projet personnel, et celui-ci offre un équilibre parfait entre simplicité, pertinence et utilité.
-* Les applications pomodoro de bureau prennent souvent un espace écran précieux et ne se synchronisent parfois pas entre les plateformes.
-* Les applications mobiles consomment une batterie précieuse, nécessitent un support et vous forcent à garder votre téléphone près de vous.
-* Peu importe l'appareil utilisé, vous téléchargez <em>encore une autre application</em>, et j'en ai ASSEZ des applications.
+* Les applications pomodoro sur Windows et MacOS prennent de la place sur l'écran et ne se synchronisent parfois pas entre les plateformes.
+* Les applications mobiles consomment de l'énergie et nécessitent un support pour tenir le téléphone en place.
+* Peu importe l'appareil utilisé, je suis forcé de télécharger <em>une autre app</em>, et j'en ai RAS-LE-BOL des apps.
 
-C'est alors que j'ai commencé à penser à créer un petit minuteur physique mignon qui soit élégant, agréable à utiliser et transportable partout.
-Je veux que l'appareil soit simple et à usage unique, une courte pause par rapport aux tablettes de verre et de métal hyper-connectées d'aujourd'hui.
-Voici un petit rendu de ce à quoi j'imagine que la version finale ressemblera :
+C'est là que j'ai eu l'idée de créer un petit minuteur mignon qui est élégant, agréable à utiliser et facile à transporter.
+Le but de ce gadget est d'être simple et à fonctionnalité unique, une petite pause de tous ces appareils hyper-connectés qui .
+Voici une image 3D du design que j'ai en tête pour la version finale :
 <br/>
 <div align="center">
   <img width="40%" height="40%" alt="rendu pomocube" src="https://github.com/user-attachments/assets/b528b48f-cb07-4bba-9183-2ecd1d8c3783" />
 </div>
 <br/>
 
-L'ingénierie et l'apprentissage prennent tous deux du temps, alors j'ai choisi de travailler par itérations plutôt que d'essayer d'atteindre ce résultat final immédiatement. Ce premier prototype vise à
-implémenter quelques fonctionnalités de base. Les révisions ultérieures utiliseront différents composants et comporteront des fonctionnalités étendues.
+L'ingénierie et l'apprentissage sont toutes deux des tâches de longue haleine. J'ai donc choisi de travailler par itérations plutôt que d'essayer d'atteindre ce résultat final dès le départ. Ce premier prototype vise à
+implémenter quelques fonctionnalités de base. Les révisions ultérieures utiliseront des pièces différentes ainsi que des fonctionnalités plus sophistiquées.
 
 
 <!-- PARTS SELECTION -->
