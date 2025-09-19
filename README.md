@@ -2,14 +2,14 @@
 
 <div align="center">
   <h1 align="center">Project Pomocube - Prototype 1</h1>
-
   <p align="center">
-    A simple, no BS pomodoro timer &middot; <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    A simple, no BS pomodoro timer &middot; Click on the image below to see a demo!
     <br />
   </p>
+
+  [![Watch the video](https://img.youtube.com/vi/l40GzJ1xq9o/0.jpg)](https://www.youtube.com/watch?v=l40GzJ1xq9o)
 </div>
-
-
+  
 
 <!-- TABLE OF CONTENTS -->
 <details>
