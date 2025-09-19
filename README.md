@@ -1,5 +1,7 @@
 <a id="readme-top"></a>
 
+**English** | [Français](README_FR.md)
+
 <div align="center">
   <h1 align="center">Project Pomocube - Prototype 1</h1>
   <p align="center">
