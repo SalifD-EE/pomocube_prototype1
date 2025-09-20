@@ -79,7 +79,7 @@ Ceci étant dit, vous vous demandez peut-être pourquoi j'entreprends ce projet.
 * Les applications mobiles consomment de l'énergie et nécessitent un support pour tenir le téléphone en place.
 * Peu importe l'appareil utilisé, je suis forcé de télécharger <em>une autre app</em>, et j'en ai RAS-LE-BOL des apps.
 
-C'est là que j'ai eu l'idée de créer un petit minuteur mignon qui est élégant, agréable à utiliser et facile à transporter.
+C'est là que j'ai eu l'idée de créer un petit minuteur qui est élégant, agréable à utiliser et facile à transporter.
 Le but de ce gadget est d'être simple et à fonctionnalité unique, une petite pause de tous ces appareils hyper-connectés qui .
 Voici une image 3D du design que j'ai en tête pour la version finale :
 <br/>
@@ -112,30 +112,30 @@ Continuant sur le thème de la simplicité, ce projet nécessite très peu de co
 <a id="microcontrôleur"></a>
 ### Microcontrôleur - ATmega328P (avec Arduino Uno R3)
 
-Oui, j'utilise un Arduino, mais laissez-moi m'expliquer. La vérité est que je ne savais pas mieux quand j'ai commencé à bricoler avec le développement embarqué.
+Oui, j'utilise un Arduino, mais laissez-moi m'expliquer. La vérité est que je n'étais pas conscient de la réputation de cette plateforme quand j'ai commencé à jouer avec les systèmes embarqués.
 Au moment où j'ai appris que ce MCU est très vieux et que la plateforme Arduino simplifie beaucoup de choses, j'avais déjà acheté de l'équipement,
-alors j'ai décidé de faire un prototype rapide avec ce que j'avais pour me mouiller les pieds et avoir quelque chose à montrer au salon de l'emploi de mon école,
+alors j'ai décidé de faire un prototype rapide avec ce que j'avais pour m'initier aux bases et avoir quelque chose à montrer à la journée stages et emplois de mon école,
 qui a lieu dans 2 semaines au moment où j'écris ces lignes. L'intention n'a jamais été de faire la version finale avec ce MCU ou avec l'IDE Arduino.
-Je prévois utiliser le STM32-F446RE beaucoup plus puissant à la place. Pour cette première itération cependant, cela fera l'affaire.
+Je prévois utiliser le STM32-F446RE, qui est beaucoup plus puissant à la place. Pour cette première itération cependant, cela fera l'affaire.
 
 <a id="écran"></a>
 ### Écran - 0.96" SSD1306 OLED Monochrome
 
-Cet écran est bon marché, a beaucoup de support et de documentation, et semble très net. Mon interface utilisateur contient beaucoup d'espace vide, ce qui se marie bien
-avec les noirs profonds pour lesquels les OLED sont connus. Ce projet est assez simple pour ne pas nécessiter de communication haute vitesse, donc la configuration à 2 câbles de l'I²C
-aide également à réduire l'encombrement des câbles.
+Cet écran est super économique, a beaucoup de support et de documentation, et l'affichage est très clair. Mon interface utilisateur contient beaucoup d'espace vide, ce qui se marie bien
+avec les noirs profonds pour lesquels les OLED sont connus. Ce projet est assez simple pour ne pas nécessiter de communication haute vitesse, donc la configuration à 2 câbles du protocole I²C
+aide également à désencombrer le câblage.
 
 <a id="encodeur-rotatif"></a>
 ### Encodeur rotatif - KY-40
 
 Cet encodeur rotatif est la seule forme d'entrée pour cet appareil. Il est satisfaisant à faire tourner et assez intuitif.
-Le bonus supplémentaire du KY-40 est qu'il est soudé à un PCB qui inclut déjà les résistances dont vous avez besoin pour filtrer
-le bruit des signaux SW, CLK et DT. Cela le rend un peu plus difficile à sécuriser sur une planche à pain, mais je peux m'en accommoder.
+Le bonus supplémentaire du KY-40 est qu'il est soudé à un PCB qui inclut déjà les résistances dont j'ai besoin pour filtrer
+le bruit des signaux SW, CLK et DT. Cela le rend un peu plus difficile à garder en place sur un breadboard, mais je peux m'arranger.
 
 <a id="buzzer-passif"></a>
 ### Buzzer passif
 
-C'est celui qui est venu avec mon kit de démarrage Arduino. Il fait le travail.
+C'est celui qui est venu avec mon kit de démarrage Arduino. Il fait son travail.
 
 <a id="schéma-de-câblage"></a>
 ### Schéma de câblage
@@ -148,11 +148,11 @@ C'est celui qui est venu avec mon kit de démarrage Arduino. Il fait le travail.
 <a id="le-processus"></a>
 ## Le processus
 
-### Faire fonctionner l'encodeur
+### Configurer l'encodeur
 <a id="faire-fonctionner-lencodeur"></a>
 J'ai commencé par tester l'encodeur rotatif. C'est assez simple de le faire
 fonctionner avec l'Uno R3. Le seul petit problème que j'ai rencontré est que mon encodeur avait ses capteurs DT et CLK inversés par rapport au tutoriel que je suivais,
-ce qui l'amenait à lire les directions de manière inversée (CW était détecté comme CCW et vice versa). C'est une bonne chose parce que cela m'a forcé à comprendre
+ce qui l'amenait à lire les directions de manière inversée (horaire était détecté comme antihoraire et vice versa). C'est une bonne chose parce que cela m'a forcé à comprendre
 comment l'appareil fonctionne réellement. La solution était simplement d'inverser la logique dans le code de DT != CLK à DT == CLK.
 
 <div align="center">
@@ -161,26 +161,26 @@ comment l'appareil fonctionne réellement. La solution était simplement d'inver
 
 <a id="afficher-un-minuteur"></a>
 ### Afficher un minuteur
-Avec l'encodeur fonctionnel, ma tâche suivante était de faire fonctionner cet OLED. D'abord, j'ai dû choisir entre utiliser une bibliothèque, suivre un tutoriel, ou écrire la logique moi-même.
-J'ai opté pour utiliser la bibliothèque Adafruit GFX pour gérer le dessin des pixels réels, avec la logique du minuteur réelle faite par votre serviteur.
+Maintenant que l'encodeur est fonctionnel, ma tâche suivante était de faire fonctionner l'écran OLED. D'abord, j'ai dû choisir entre utiliser une librairie, suivre un tutoriel, ou écrire la logique moi-même.
+J'ai opté pour la librairie Adafruit GFX pour gérer l'affichage des pixels, et je me suis occupé de la logique de la minuterie moi-même.
 
-J'ai utilisé la fonction millis() d'Arduino comme base, qui compte combien de temps en millisecondes s'est écoulé depuis le démarrage. Ma logique est principalement centrée autour de
-l'enregistrement de la valeur de millis() quand le minuteur démarre, la définition de combien de temps je veux que le minuteur fonctionne, et faire diverses conversions et mathématiques simples pour déterminer quoi afficher.
+J'ai utilisé la fonction millis() d'Arduino comme base. Cette dernière compte combien de temps en millisecondes s'est écoulé depuis le démarrage du MCU. Ma logique est principalement centrée autour de
+l'enregistrement de la valeur de millis() quand la minuterie démarre.
 
 ```
 elapsedTime = millis() - timerStartTime;
 ```
 
-Un petit défi était d'afficher des zéros en tête quand il y a moins de 10 secondes dans un segment donné. J'ai fini par décider d'une logique simple.
-Ajoutez simplement un zéro d'abord si le nombre de secondes ou minutes à afficher est inférieur à 10. Facile.
+Un petit défi était d'afficher un zéro avant le chiffre quand il y a moins de 10 secondes dans un segment de l'écran.
+Il suffit d'ajouter un zéro si la section est moins élevé que 10.
 
 ```
-if (minDisplay < 10) display.print("0"); //Zéro en tête
+if (minDisplay < 10) display.print("0");
 display.print(minDisplay);
 ```
 
 Le prochain défi était de gérer la fin d'un segment. Au début, je pensais que j'avais juste besoin de vérifier si le temps restant était supérieur à zéro.
-Mais faire cela a résulté en un minuteur sautant d'une manière ou d'une autre à un temps complètement aléatoire. Pourquoi ? J'ai imprimé le temps restant sur le moniteur série pour comprendre ce qui se passait (l'Uno ne supporte pas le débogage, hélas).
+Mais le résultat était qu'en fin de session la durée passait soudainement de quelques secondes à plus de 50 min. Pourquoi ? J'ai affiché le temps restant sur le Serial Monitor pour comprendre ce qui se passait (l'Uno ne supporte pas le débogage, hélas).
 
 ```
 195
@@ -194,10 +194,8 @@ Mais faire cela a résulté en un minuteur sautant d'une manière ou d'une autre
 4294967135
 ```
 
-Puis j'ai compris. Un regard plus attentif révèle que le minuteur interne de l'ATmega 328P a un taux de tick d'environ 45 ms à 16 MHz, donc si le temps restant était plus petit que ce tick, nous irions dans les négatifs, sauf qu'il n'y <em>a</em> pas de négatifs,
-parce que le temps est géré avec des unsigned longs, alors au lieu nous débordon à la valeur la plus élevée possible pour ce type de variable, qui est environ 4,29 milliards. C'est pourquoi nous passons de 16 à ces nombres ridiculement énormes.
-La solution était de mettre à jour le minuteur seulement si le temps restant était à plus d'un tick de zéro, sinon, le segment est terminé, et le minuteur s'arrête. Vous perdez un peu de précision à cause de cette limitation, mais 50-60 millisecondes ne sont pas cruciales pour ce qui n'est rien de plus qu'un petit minuteur d'étude.
-
+C'est là que j'ai compris. Un vérification approfondie révèle que la minuterie interne de l'ATmega 328P est mise à jour environ chaque 45 ms à 16 MHz, donc si le temps restant était plus petit que ce tick, nous irions dans les négatifs, sauf qu'il n'y a <em>pas</em> de négatifs dans le contexte actuel, parce que le temps est géré avec des unsigned longs. Cela cause un débordement à la valeur la plus élevée possible pour ce type de variable, qui est environ 4,29 milliards. C'est pour cela que dans la sortie ci-haut, nous passons de 16 à des nombres énormes.
+La solution était de mettre à jour la minuterie seulement si le temps restant était à plus d'un tick de zéro, sinon, le segment est terminé, et la minuterie s'arrête. Il y a une certaine perte de précision, mais comme nous parlons ici d'une minueterie pour l'étude et le travail, je juge qu'il n'est pas crucial d'avoir une précision absolue.
 ```
 if (timerDuration - elapsedTime > TICK_RATE) {
     elapsedTime = millis() - timerStartTime;
@@ -206,17 +204,17 @@ if (timerDuration - elapsedTime > TICK_RATE) {
     //La logique de fin de segment va ici...
 }
 ```
-Cela a résulté en un minuteur fonctionnel, bien que rudimentaire, que vous pouvez voir ici :
+Le résultat de ce travail peut être vu dans l'image ci-dessous :
 <br/>
 <div align="center">
   <img width="40%" height="40%" alt="image" src="https://github.com/user-attachments/assets/7118cc0d-da98-4ad4-a9d0-6b2646958485" />
 </div>
 
 <a id="créer-une-machine-à-états"></a>
-### Créer une machine à états finis (FSM)
+### Créer une machine à états finis (MÉF)
 
 Ensuite, j'ai commencé à implémenter une machine à états finis pour gérer les états possibles du minuteur. La première itération était aussi simple que possible avec 3 états : WORK, S_BREAK et L_BREAK.
-Les implémenter avec une déclaration switch était assez facile, surtout après avoir pris le temps de dessiner ma FSM sur un tableau blanc.
+L'implémentation était assez facile, surtout après avoir pris le temps de dessiner ma FSM sur un tableau blanc. Il suffit d'utiliser un switch statement.
 <br/>
 <div align="center">
   <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/56cd5906-b2a3-4cff-8959-c05edb07cf6d" />
@@ -225,16 +223,14 @@ Les implémenter avec une déclaration switch était assez facile, surtout aprè
 <a id="implémenter-une-fonction-pause"></a>
 ### Implémenter une fonction pause
 
-C'était l'une des parties les plus difficiles de ce projet. Il m'a fallu quelques heures pour le résoudre, et j'ai même eu besoin d'un coup de pouce d'un LLM. J'ai fait attention à ne pas le laisser me donner une solution cependant. Normalement, j'utilise les LLMs et les exemples extensivement, mais le but ici est d'apprendre et d'aiguiser mes compétences pour vraiment comprendre ce que je fais.
+Le mode pause a été l'une des parties les plus difficiles de ce projet. Il m'a fallu quelques heures pour le résoudre, et j'ai même eu besoin d'un coup de pouce d'une IA. Par contre, je me suis assuré de ne pas le laisser me donner une solution. Normalement, j'utilise énormément l'IA et des exemples sur internet, mais le but ici est d'apprendre et d'améliorer mes compétences pour vraiment comprendre ce que je fais.
 La solution pour la pause s'est avérée être en fait assez simple.
 
-Le temps écoulé est habituellement calculé en utilisant la différence entre le temps d'exécution actuel et le temps d'exécution quand le minuteur a été démarré, mais quand vous mettez en pause, millis() ne s'arrête pas de compter.
-À un niveau bas comme celui-ci, nous lisons plus ou moins de l'oscillateur (probablement avec un tas de choses simplifiées par la plateforme Arduino), qui ne peut pas être arrêté.
-Si vous mettez en pause pendant 30 secondes, millis() a maintenant 30 secondes de plus que ce que vous attendez. Donc tout ce que vous devez faire est de retirer ces 30 secondes de millis(), et vous êtes de retour à l'état exact où vous étiez avant de mettre en pause.
+Le temps écoulé est habituellement calculé en utilisant la différence entre le temps d'exécution actuel et le temps d'exécution quand la minuterie a été démarré, mais même quand le mode pause est activé, millis() ne s'arrête pas de compter.
+En programmation bas niveau, la lecture est faite à partir de l'oscillateur interne (probablement avec un tas de choses simplifiées par la plateforme Arduino), qui ne peut pas être arrêté.
+Si le mode pause est activé pendant 30 secondes, millis() a maintenant 30 secondes de trop. Il faut donc retirer ces 30 secondes de millis() pour revenir à l'état de la minuterie avant de la mettre sur pause.
 
-Même en implémentant ceci, j'ai rencontré quelques problèmes. Le temps ajouté en arrière n'avait aucun sens. Après un débogage rudimentaire, j'ai rapidement réalisé que j'ai besoin de garder un décompte non seulement d'une pause, mais de <em>toutes les pauses</em> jusqu'à
-ce qu'un nouveau segment commence et que l'heure de début soit remise à 0. Le temps de pause total doit être remis à 0 à ce moment-là aussi. Et maintenant, la pause fonctionne comme elle le devrait. Quand elle l'a fait, une poussée d'excitation et de satisfaction a couru à travers mon corps
-et j'ai chuchoté "fils de p***" à moi-même. Voici le diagramme FSM mis à jour :
+Même en implémentant ceci, j'ai rencontré quelques problèmes. À la sortie du mode pause, la minuterie ne retournait quand-même pas à l'état attendu. Après un peu de débogage, j'ai rapidement réalisé que j'ai besoin de non seulement garder un décompte d'une pause, mais de <em>toutes les pauses</em> jusqu'à ce qu'un nouveau segment commence et que les variables soient remise à 0. Le temps de pause total doit être remis à 0 à ce moment-là aussi. Et maintenant, le mode pause fonctionne correctement. Voici le diagramme FSM mis à jour :
 
 <div align="center">
   <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/ad76c537-368e-4018-bc0d-352e7a130adc" />
@@ -243,20 +239,21 @@ et j'ai chuchoté "fils de p***" à moi-même. Voici le diagramme FSM mis à jou
 <a id="créer-un-menu-principal"></a>
 ### Créer un menu principal
 
-Avec le projet qui commençait vraiment à prendre forme, j'ai ajouté le menu principal qui vous permet de configurer vos durées et de démarrer le minuteur. Cela impliquait beaucoup de défis.
+Maintenant que le project commence à prendre forme, j'ai ajouté le menu principal qui permet à l'utilisateur de configurer la durée de chaque segment et de démarrer la minuterie. Cela impliquait beaucoup de défis.
 
-D'abord, j'ai dû inventer un système pour gérer les états du menu. J'ai pris une inspiration libérale de ce [tutoriel All About Circuits](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/).
-Ce n'était pas un simple copier-coller cependant. La logique sous-jacente est la même, mais j'ai lourdement modifié le code pour l'adapter à mes besoins. Deux variables pilotent le menu : une pour quel élément est sélectionné et une autre pour savoir si vous l'ajustez ou non.
+D'abord, j'ai dû créer un système pour gérer les états du menu. J'ai pris beaucoup d'inspiration de ce [tutoriel de All About Circuits](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/).
+La logique sous-jacente est la même, mais j'ai énormément modifié le code pour l'adapter à mes besoins. Deux variables contrôlent le menu : une pour l'élément sélectionné et une autre pour savoir si on est dans un sous-menu.
 
-Le deuxième défi était de dessiner le menu. J'ai encore une fois utilisé le tutoriel d'AAC comme base. Il ne m'a fallu que de simples déclarations if-else pour déterminer si chaque élément était mis en évidence ou non.
-Quelques mathématiques de base impliquant les limites de texte m'ont également permis de centrer dynamiquement les éléments sur l'écran. Afficher l'heure était un peu plus délicat. Ma fonction displayTime() précédente était mal adaptée pour ceci,
-puisqu'elle formatait les millisecondes en format MM:SS et affichait l'heure sur l'écran. C'est quand j'ai compris que la fonction avait deux rôles, ce qui n'est généralement pas une bonne pratique,
-alors je l'ai divisée en 2 fonctions séparées. displayTime() fait ce qu'elle dit et affiche simplement ce qui est dans mon tampon de temps avec la bonne taille et couleur,
-tandis que formatTime() convertit un unsigned long en format MM:SS réel, puis le place dans un tampon juste assez grand pour le contenir.
+Le deuxième défi était d'afficher le menu. J'ai encore une fois utilisé le tutoriel d'AAC comme base. Quelques manipulations mathématiques de base m'ont permis de centrer dynamiquement les éléments sur l'écran. 
+Afficher l'heure était un peu plus délicat. Ma fonction displayTime(), que j'utilisais depuis le début du développement de ce prototype, était mal adaptée pour ceci,
+puisqu'elle formatait les millisecondes en format MM:SS ET affichait l'heure sur l'écran. C'est là que j'ai compris que la fonction avait deux rôles, ce qui n'est pas une bonne pratique de programmation,
+alors je l'ai divisée en 2 fonctions séparées. displayTime() affiche simplement ce qui est dans mon buffer de temps avec la bonne taille et couleur,
+tandis que formatTime() convertit un unsigned long en string de format MM:SS, puis le place dans un tampon juste assez grand pour le contenir.
 
-Le troisième défi était de corriger mes entrées d'encodeur rotatif, qui fonctionnaient bien seules, mais étaient soit mal lues soit pas lues du tout quand jumelées avec un affichage. C'est parce que jusqu'à maintenant, tout mon code était 100% séquentiel dans la boucle.
-Cela introduisait beaucoup de retards. Donc j'ai dû apprendre les interruptions, mais ce n'était honnêtement pas trop difficile. Tout ce que vous avez à faire est de brancher la valeur que vous voulez lire dans l'une des broches d'interruption de l'Arduino et lui dire quelle fonction exécuter quand un changement est détecté.
-Et voilà, c'est beaucoup plus réactif maintenant, bien qu'avec quelques problèmes de hypersensibilité avec les rotations dans le sens horaire qui devront être corrigés plus tard.
+Le troisième défi était de corriger mes entrées d'encodeur rotatif, qui fonctionnaient bien par elles-mêmes, mais pas lorsqu'un écran est connecté. C'est parce que jusqu'à maintenant, tout mon code était 100% séquentiel.
+Cela introduisait beaucoup de délai. J'ai donc dû apprendre à utiliser des interrupts, mais ce n'était honnêtement pas trop difficile. Il faut simplement mettre la valeur qu'on veut lire dans l'une des broches interrupt 
+de l'Arduino et de spécifier quelle fonction exécuter quand un changement est détecté.
+Et voilà, les contrôles fonctionnent bien mieux maintenant, quoiqu'il y a encore quelques problèmes d'hypersensibilité qui devront être corrigés plus tard.
 
 <div align="center">
   <img width="40%" height="40%" alt="image" src="https://github.com/user-attachments/assets/5b1f8f1c-4e12-4e51-996d-64a9ba550ef2" />
@@ -265,21 +262,20 @@ Et voilà, c'est beaucoup plus réactif maintenant, bien qu'avec quelques probl�
 <a id="implémenter-un-buzzer"></a>
 ### Implémenter un buzzer
 
-La dernière fonctionnalité majeure à implémenter était un buzzer passif. Le faire fonctionner était étonnamment difficile. L'option évidente aurait été d'utiliser simplement la fonction delay() d'Arduino, mais cela arrête complètement tout le programme, ce qui ne fonctionne pas
-parce que l'affichage doit continuer à se rafraîchir en arrière-plan. L'approche classique millis() ne fonctionne pas non plus, parce que jouer une mélodie composée de différentes notes et pauses serait impossible. Chaque nouvelle boucle oublierait la dernière note jouée
-et ne saurait pas laquelle jouer ensuite. La seule façon d'empêcher cela est de créer un séquenceur, ce que j'ai fait. À cette fin, j'ai créé une structure appelée "Note", qui contient la fréquence, la durée et plus important encore,
-combien de temps attendre jusqu'à la prochaine note. Mettre les Notes dans un tableau permet de construire n'importe quelle mélodie en spécifiant simplement quelles notes jouer manuellement. Une variable globale nommée "currentNote" décide où nous en sommes dans la séquence
-et est incrémentée de un chaque fois qu'une note est jouée. Sa valeur est -1 si rien ne joue en ce moment.
+La dernière fonctionnalité majeure à implémenter était un buzzer passif. Le faire fonctionner a été étonnamment difficile. L'option évidente aurait été d'utiliser la fonction delay() d'Arduino, mais cela gèle complètement l'exécution du programme, ce qui ne fonctionne pas
+parce que l'affichage doit continuer à se rafraîchir en arrière-plan. L'approche classique millis() ne fonctionne pas non plus, parce que jouer une mélodie composée de notes et de pauses serait impossible. Chaque nouvelle boucle oublierait la dernière note jouée
+et ne saurait pas la prochaine note jouer. La seule façon d'empêcher cela est de créer un séquenceur, ce que j'ai fait. À cette fin, j'ai créé un struct appelé "Note", qui contient la fréquence, la durée et le délai d'attente avant la prochaine note. Mettre les Notes dans un tableau permet de construire n'importe quelle mélodie en spécifiant simplement quelles notes sont à jouer. Une variable globale nommée "currentNote" décide où nous en sommes dans la séquence
+et est incrémentée par un chaque fois qu'une note est jouée. Sa valeur est -1 si rien ne joue en ce moment.
 
-La deuxième partie du défi avec ce séquenceur était de comprendre comment commencer et terminer une séquence. J'ai décidé d'utiliser une logique simple pour ce dernier. Si vous attendez 0 ms jusqu'à la prochaine note, on suppose que c'est parce qu'il n'y a pas de prochaine note. Cela fonctionne un peu comme le terminateur nul pour les chaînes en C. Finalement, j'ai dû comprendre comment décider si je voulais ou non démarrer une séquence ou ne rien faire. Ma première idée était d'assumer que vous vouliez démarrer une séquence si vous appeliez la fonction pendant que currentNote était -1. Mais avec cette logique, si vous appelez la fonction à chaque boucle pour vérifier si vous jouez quelque chose, alors vous joueriez quelque chose en répétition. Je me suis senti vraiment confus pendant un moment, alors j'ai pris une douche, fait du café, et j'ai laissé ce problème tranquille.
+La deuxième partie du défi avec ce séquenceur était de comprendre comment commencer et terminer une séquence. J'ai décidé d'utiliser une logique simple. Si le délai d'attente jusqu'à la prochaine note est 0, on suppose qu'il n'y a pas de prochaine note. Un peu comme le null terminator pour les chaînes en C. Enfin, j'ai dû élaborer un système pour décider si je voulais démarrer une séquence ou ne rien faire. Ma première idée était d'assumer qu'on voulait démarrer une séquence si la fonction était appelée pendant que currentNote était -1. Mais selon cette logique, si on appelle la fonction à chaque boucle pour vérifier si une mélodie est en cours de lecture, on jouerait tout le temps une mélodie. Je sentait confus et honnêtement plutôt frustré, alors j'ai pris une douche, je me suis fait un café, et j'ai laissé ce problème mariner en arrière-plan.
 
-En revenant à mon bureau, j'ai eu une nouvelle idée : diviser le tout premier ton et tous les autres en 2 fonctions appelées playBeepSequence() et updateBeepSequence() respectivement. La première lance une séquence et n'est appelée qu'une seule fois quand vous voulez jouer une séquence, tandis que la dernière est appelée à chaque boucle et vérifie si une séquence est en cours de lecture. Si c'est le cas, alors elle incrémente currentNote de 1 et le joue, mais seulement si le temps d'attente de la note précédente s'est écoulé. Quand la dernière note est atteinte, currentNote est remis à -1, attendant le prochain appel de playBeepSequence(). Pour l'instant, je n'ai que 2 séquences très basiques qui sonnent comme un minuteur de magasin à un dollar, mais plus tard, faire des mélodies plus expressives est définitivement dans les cartes.
+À mon retour, j'ai eu une nouvelle idée : séparer la fonction en deux. En effet, j'ai décidé de créer deux fonctions nommées playBeepSequence() et updateBeepSequence(). La première démarre une séquence et n'est appelée qu'une seule fois lorsqu'on veut jouer une séquence, tandis que la deuxième est appelée automatiquement à chaque boucle et vérifie si une séquence est en cours de lecture. Si c'est le cas, elle incrémente la note courante de 1 et la joue, mais seulement si le temps d'attente de la note précédente s'est écoulé. Quand la dernière note est atteinte, currentNote est remis à -1, et updateBeepSequence() ne joue plus rien. Pour l'instant, j'ai composé 2 séquences très basiques qu'on pourrait retrouver sur une petite montre achetée au Dollarama, mais j'aimerais inclure des mélodie plus expressives plus tard.
 
 <a id="assembler-le-tout"></a>
-### Assembler le tout
+### Assemblage final
 
-Avec ceci, toute la fonctionnalité principale pour ce minuteur était complète... Mais il y avait encore quelques ajustements de qualité de vie à faire. J'avais reporté presque chaque fonctionnalité d'interface utilisateur et d'expérience utilisateur jusqu'à la fin, alors maintenant c'est le temps de s'attaquer à cela. La première chose qui devait disparaître était cette police par défaut épouvantable pour l'affichage du temps. Je l'ai remplacée par Sans, l'une des polices offertes par la bibliothèque Adafruit GFX. Elle est inspirée par la pérenne Helvetica et elle semble géniale.
-Elle a instantanément transformé le sentiment du produit d'un gadget de hacker à un vrai produit utilisé par de vraies personnes. Je veux dire, voyez la différence par vous-même.
+L'implémentation des fonctionnalités principales de ce prototype est presque terminée... Mais il y a encore quelques ajustements à faire. J'avais gardé le design UI et UX pour la fin, et il est maintenant grand-temps de donner un coup de joli à l'interface. La première chose qui devait disparaître était la police par défaut pour l'affichage du temps, que je trouvais absolument hideuse. Je l'ai remplacée par Sans, l'une des polices offertes par la librairie Adafruit GFX. Elle est inspirée par l'intemporel Helvetica.
+Elle a instantanément transformé le look du produit de «gadget de hacker» à «produit sérieux». Constatez vous-même la différence!
 
 <div align="center">
   <img width="30%" height="30%" alt="image" src="https://github.com/user-attachments/assets/0061f9a2-940f-4262-81c7-f1ffc63ab661" />
@@ -287,18 +283,17 @@ Elle a instantanément transformé le sentiment du produit d'un gadget de hacker
 </div>
 <br/>
 
-Après ceci, j'avais quelques mouches plus ennuyeuses à écraser pour le polissage supplémentaire :
+Après cette refonte, il me restait quelques petits soucis à régler :
 
-* Il n'y avait pas de rétroaction visible et évidente pour faire savoir à l'utilisateur que le minuteur était en pause. Oui, le texte en haut dit "Pause", mais c'est trop petit ! J'ai fait clignoter l'affichage quand le minuteur est en pause, ce qui le rend significativement plus facile à dire d'un coup d'œil que le minuteur est suspendu.
-* Quand vous démarriez un minuteur à, disons, 5 minutes, vous verriez "05:00" pour une fraction de seconde, puis il diminuerait immédiatement à "04:59". Je sais pourquoi cela arrive et cela fait sens, mais c'est choquant. Ceci a été résolu en ajoutant sournoisement exactement 999 ms à chaque durée unique.
-  De cette façon, il y a une "période de grâce" intégrée où vous pouvez réellement voir combien de temps vous avez mis.
-* Il y avait un léger problème de débondissement avec l'encodeur rotatif, spécifiquement lors de la rotation dans le sens horaire. J'ai corrigé cela en exigeant au moins 2 ms de délai entre les entrées. Plus et trop d'entrées étaient sautées. Moins et le problème n'était simplement pas corrigé.
-  Cela ne se sent toujours pas aussi bien que je le voudrais, mais ça devra faire pour cette itération.
+* Il n'y avait pas de rétroaction visible pour faire savoir à l'utilisateur que la minuterie était en mode pause. Oui, le texte en haut dit "Pause", mais il est trop petit ! J'ai fait clignoter l'affichage quand la minuterie est en pause. Il est maintenant bien plus facile de constater que la minuerie est suspendue.
+* Quand on démarrait un minuteur, par exemple, 5 minutes, on voyait «05:00» pendant une fraction de seconde, avant de voir «04:59» presque immédiatement. Cela fait un peu bizarre. J'ai ajouté exactement 999 ms à chaque durée du programme.
+  De cette façon, il y a une "période de grâce" intégrée où on peut réellement la minuterie démarrer avec sa durée totale.
+* Il y avait un léger problème de debounce avec l'encodeur rotatif, spécifiquement lors de la rotation en sens horaire. J'ai corrigé cela en exigeant au moins 2 ms de délai entre les entrées.
 
 <a id="résultat-final"></a>
 ## Résultat final
 
-Après avoir commandé un Nano V3, ~~volé~~ emprunté la batterie externe de ma sœur et fait une gestion rapide des câbles pour rendre le tout portable, voici le résultat final :
+Voici le résultat final de mon dur labeur :
 
 <div align="center">
   <img width="55%" height="55%" alt="image" src="https://github.com/user-attachments/assets/74e80ea5-289a-4cb4-9774-4bf50e5c639b" />
@@ -308,37 +303,37 @@ Après avoir commandé un Nano V3, ~~volé~~ emprunté la batterie externe de ma
   <br/>
   <img width="50%" height="50%"  alt="image" src="https://github.com/user-attachments/assets/bc0879d0-332a-4b03-87c8-1ff3039c5d07" />
   <br/>
-  Ici, j'ai connecté l'écran OLED à quelques fils Dupont et l'ai appuyé sur un support de téléphone pour une visualisation plus facile.
+  Ici, j'ai connecté l'écran OLED à quelques fils Dupont et l'ai mais sur un support de téléphone pour le rendre plus visible.
 </div>
 
 <!-- CONCLUSION -->
 <a id="conclusion"></a>
 ## Conclusion
 
-Je suis fier de ce que j'ai accompli jusqu'à présent et j'ai beaucoup appris du processus. En regardant en arrière, voici ce que je ferais différemment avec ce que je sais maintenant :
+Je suis plutôt fier de ce que j'ai accompli jusqu'à présent et j'en ai beaucoup appris pas mal à travers ce processus. Avec du recul, voici ce que je ferais différemment compte tenu de mes nouvelles connaissances :
 <ul>
-  <li>Être plus diligent lors de la recherche de pièces. Si j'avais passé plus de temps à réfléchir à ce que je voulais exactement faire avec chaque composant, j'aurais pu économiser de l'argent sur des choses que je n'ai pas fini par utiliser ou devrai remplacer plus tard, surtout pour l'affichage.</li>
-  <li>Utiliser le contrôle de version dès le début. Vous lisez actuellement ceci sur GitHub, donc j'ai évidemment changé d'avis plus tard, mais je ne l'ai pas fait au début parce que je pensais que ce projet était trop petit pour le nécessiter. J'avais tort.</li>
+  <li>Être plus diligent lors de la recherche de pièces. Si j'avais passé plus de temps à réfléchir à ce que je voulais exactement faire avec chaque composant, j'aurais pu économiser de l'argent sur des choses que je n'ai pas utilisé ou que je vais devoir remplacer dans le futur.</li>
+  <li>Utiliser Git dès le départ. Vous lisez actuellement cet article sur GitHub, donc j'ai évidemment changé d'avis plus tard, mais je ne l'ai pas fait au début parce que je pensais que ce projet était trop simple pour cela. J'avais tort.</li>
 </ul>
 
-Et pourtant, comme vous prenez des leçons du passé, vous devez aussi regarder vers l'avenir. Ce n'est que le commencement, et je prévois vraiment concevoir un vrai produit de A à Z.
-Voici la feuille de route que j'ai en tête pour y arriver :
+Ceci n'est que le début, et je prévois de concevoir un produit de A à Z.
+Voici la ligne du temps que j'ai en tête pour y arriver :
 
-- [x] Créer un prototype basé sur Arduino
+- [x] Créer un prototype Arduino
 - [ ] Créer un prototype STM32
 - [ ] Concevoir et produire un PCB
-- [ ] Concevoir et imprimer en 3D un boîtier
-- [ ] Faire la construction finale
+- [ ] Concevoir et produire un boîtier
+- [ ] Faire l'assemblage final
 
-Entre-temps, j'utilise ce prototype pendant mes études et je prends des notes sur les fonctionnalités à ajouter et les ajustements à faire dans la prochaine itération.
-C'était sérieusement vraiment amusant à faire, et je ne me suis pas senti aussi motivé par un projet personnel depuis des années. Si vous avez lu jusqu'ici dans mon
-compte-rendu, vous avez la patience d'un saint, parce que bon sang c'était long. Merci d'avoir lu, et j'espère que vous en avez tiré quelque chose.
+Entre-temps, j'utilise ce prototype pendant mes sessions d'étude et je prends note des fonctionnalités à ajouter et des ajustements à faire pour la prochaine itération.
+Je me suis bien amusé pendant la conception de ce prototype, et je me sens incroyablement motivé par ce projet. Si vous vous êtes rendus jusqu'ici dans votre lecture, 
+je vous remercie sincèrement de m'avoir lu, et j'espère que vous en avez tiré quelque chose.
 
 <!-- CONTACT -->
 <a id="contact"></a>
 ## Contact
 
-Voulez-vous prendre contact ? Travailler avec moi ? Me faire travailler <em>pour</em> vous ? Vous pouvez me trouver ici :
+Voulez-vous prendre un café avec moi? Travailler avec moi? Me faire travailler <em>pour</em> vous ? Vous pouvez me trouver ici :
 
 Courriel - salif8514@gmail.com<br/>
 LinkedIn - https://www.linkedin.com/in/salif-d-b567011ba/
@@ -347,8 +342,8 @@ LinkedIn - https://www.linkedin.com/in/salif-d-b567011ba/
 <a id="remerciements"></a>
 ## Remerciements
 
-* [L'excellente série de Paul McWorther sur Arduino](https://www.youtube.com/playlist?list=PLGs0VKk2DiYw-L-RibttcvK-WBZm8WLEP)
-* [Ce tutoriel All About Circuits](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/)
-* [Ce gars expliquant les interruptions d'une façon qui fait sens](https://www.circuitbasics.com/how-to-use-hardware-interrupts-and-timer-interrupts-on-the-arduino/)
+* [L'excellente série de Paul McWorther sur les bases d'Arduino](https://www.youtube.com/playlist?list=PLGs0VKk2DiYw-L-RibttcvK-WBZm8WLEP)
+* [Le tutoriel de All About Circuits](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/)
+* [Cette merveilleuse explication des interrupts ainsi que des minuteries Arduino](https://www.circuitbasics.com/how-to-use-hardware-interrupts-and-timer-interrupts-on-the-arduino/)
 
-<p align="right">(<a href="#readme-top">retour au sommet</a>)</p>
+<p align="right">(<a href="#readme-top">Retour au haut de la page</a>)</p>
