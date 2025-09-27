@@ -16,7 +16,7 @@
 #define DT_PIN 3
 #define SW_PIN 4
 #define BUZZER_PIN 8
-#define CLK_DEBOUNCE_DELAY 2
+#define CLK_DEBOUNCE_DELAY 0
 #define SW_DEBOUNCE_DELAY 200
 
 //--------------------BUZZER--------------------
@@ -406,7 +406,11 @@ OUTPUT: None
 SPECS: This function only works if startBeepSequence is called first.
 ---------------------------------------------------------------*/
 void updateBeepSequence() {
-  if (currentNote == -1) return;
+  if (currentNote == -1) {
+    noTone(BUZZER_PIN);
+    digitalWrite(BUZZER_PIN, LOW);
+    return;
+  }
 
   if (millis() - noteStartTime >= currentSequence[currentNote].pauseAfter) {
 
